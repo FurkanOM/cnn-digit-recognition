@@ -55,6 +55,3 @@ for trained_with in trainable:
     print("Trained with:", trained_with, "SVHN Test loss:", SVHN_score[0])
     print("Trained with:", trained_with, "SVHN Test accuracy:", SVHN_score[1])
     print("============================================================================")
-
-import code
-code.interact(local=locals())

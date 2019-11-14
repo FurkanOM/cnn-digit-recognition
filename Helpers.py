@@ -2,13 +2,65 @@ import os
 import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from PIL import Image
 import keras
 from keras.datasets import mnist
 from keras import backend as K
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 MNIST_height, MNIST_width = 28, 28
+
+def plot_confusion_matrix(cm, labels, normalize=True, title=None, cmap=plt.cm.Blues):
+    if not title:
+        if normalize:
+            title = 'Normalized confusion matrix'
+        else:
+            title = 'Confusion matrix, without normalization'
+    if normalize:
+        a = cm.astype('float')
+        b = cm.sum(axis=1)[:, np.newaxis]
+        cm = np.divide(a, b, out=np.zeros_like(a), where=b!=0)
+    fig, ax = plt.subplots()
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+    ax.figure.colorbar(im, ax=ax)
+    # We want to show all ticks...
+    ax.set(xticks=np.arange(cm.shape[1]),
+           yticks=np.arange(cm.shape[0]),
+           # ... and label them with the respective list entries
+           xticklabels=labels, yticklabels=labels,
+           title=title,
+           ylabel='True label',
+           xlabel='Predicted label')
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+    plt.margins(0.05)
+    # Loop over data dimensions and create text annotations.
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
+    fig.tight_layout()
+    return ax
+
+def handle_confusion_matrix(actuals, predictions, labels, title, save_path=None, print_results=True):
+    cm = confusion_matrix(actuals, predictions)
+    plot_confusion_matrix(cm, labels, title=title)
+    if save_path:
+        plt.savefig(save_path)
+    if not print_results:
+        return
+    print('Classification Report')
+    print(classification_report(actuals, predictions, labels=labels))
+    print('Confusion Matrix')
+    print(cm)
+    print('Accuracy Score')
+    print(accuracy_score(actuals, predictions))
 
 def get_files(path):
     files = []

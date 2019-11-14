@@ -34,3 +34,11 @@ python predictor.py
 | SVHN                 | 0.8877                | 0.5858                 |
 | MNIST                | 0.2897                | 0.9905                 |
 | SVHN + MNIST         | 0.8983                | 0.9891                 |
+
+### Normalized Confusion Matrices
+
+![svhn-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhn.png) ![mnist-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhn.png)
+
+![svhn-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_mnist.png) ![mnist-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_mnist.png)
+
+![svhn-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhnmnist.png) ![mnist-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhnmnist.png)
