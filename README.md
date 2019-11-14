@@ -37,8 +37,8 @@ python predictor.py
 
 ### Normalized Confusion Matrices
 
-![svhn-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhn.png) ![mnist-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhn.png)
-
-![svhn-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_mnist.png) ![mnist-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_mnist.png)
-
-![svhn-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhnmnist.png) ![mnist-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhnmnist.png)
+SVHN confusion matrices for different models | MNIST confusion matrices for different models
+:-------------------------------------------:|:---------------------------------------------:
+![svhn-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhn.png) | ![mnist-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhn.png)
+![svhn-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_mnist.png) | ![mnist-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_mnist.png)
+![svhn-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhnmnist.png) | ![mnist-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhnmnist.png)
