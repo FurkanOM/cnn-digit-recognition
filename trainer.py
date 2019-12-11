@@ -4,15 +4,14 @@ from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import Helpers
 
-MNIST = Helpers.get_MNIST_data()
-SVHN = Helpers.get_SVHN_data()
-#
-batch_size = 128
+use_datasets = ["ORHD", "SVHN", "MNIST"]
+batch_size = 256
 num_classes = 10
-epochs = 12
+epochs = 20
+#
+datasets = Helpers.get_datasets(use_datasets, n_combinations=3)
 input_shape = Helpers.get_input_shape()
-trainable = ["SVHN", "MNIST", "SVHN+MNIST"]
-for trained_with in trainable:
+for trained_with in datasets:
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
                      activation="relu",
@@ -29,15 +28,11 @@ for trained_with in trainable:
                   optimizer=keras.optimizers.Adadelta(),
                   metrics=["accuracy"])
     #
-    early_stopping = EarlyStopping(monitor="val_accuracy", patience=3, verbose=0, mode="auto")
+    early_stopping = EarlyStopping(monitor="val_accuracy", patience=4, verbose=0, mode="auto")
     model_checkpoint = ModelCheckpoint("models/"+trained_with+"_model.h5", save_best_only=True, monitor="val_accuracy", mode="auto")
     #
-    if trained_with == "SVHN":
-        x_train, y_train, x_valid, y_valid = SVHN["x_train"], SVHN["y_train"], SVHN["x_valid"], SVHN["y_valid"]
-    elif trained_with == "MNIST":
-        x_train, y_train, x_valid, y_valid = MNIST["x_train"], MNIST["y_train"], MNIST["x_valid"], MNIST["y_valid"]
-    else:
-        x_train, y_train, x_valid, y_valid = Helpers.merge_SVHN_MNIST_to_training(SVHN, MNIST)
+    dataset = datasets[trained_with]
+    x_train, y_train, x_valid, y_valid = dataset["x_train"], dataset["y_train"], dataset["x_valid"], dataset["y_valid"]
     #
     print("Training started with:", trained_with, "dataset")
     model.fit(x_train, y_train,
@@ -47,11 +42,8 @@ for trained_with in trainable:
               validation_data=(x_valid, y_valid),
               callbacks=[early_stopping, model_checkpoint])
     #
-    MNIST_score = model.evaluate(MNIST["x_test"], MNIST["y_test"], verbose=0)
-    print("Trained with:", trained_with, "MNIST Test loss:", MNIST_score[0])
-    print("Trained with:", trained_with, "MNIST Test accuracy:", MNIST_score[1])
-    #
-    SVHN_score = model.evaluate(SVHN["x_test"], SVHN["y_test"], verbose=0)
-    print("Trained with:", trained_with, "SVHN Test loss:", SVHN_score[0])
-    print("Trained with:", trained_with, "SVHN Test accuracy:", SVHN_score[1])
+    print("============================================================================")
+    print("Trained with:", trained_with)
+    print("============================================================================")
+    Helpers.evaluate(model, datasets, use_datasets)
     print("============================================================================")

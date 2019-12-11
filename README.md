@@ -1,15 +1,19 @@
 # CNN Digit Recognition
 
-Simple application for digit recognition with CNN using two different datasets.
+Simple application for digit recognition with CNN using three different datasets.
 
  * MNIST Database of Handwritten Digits [link](https://keras.io/datasets/)
 
- * SVHN - Street View House Numbers Cropped Digit Dataset [link](http://www.iapr-tc11.org/mediawiki/index.php?title=The_Street_View_House_Numbers_(SVHN)_Dataset)
+ * ORHD - Optical Recognition of Handwritten Digits Data Set [link](https://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits)
+
+ * SVHN - Street View House Numbers Cropped Digit Dataset [link](http://www.iapr-tc11.org/mediawiki/index.php?title=The_Street_View_House_Numbers_%28SVHN%29_Dataset)
 
 ## Usage
 
 Project models created in virtual environment using [anaconda](https://www.anaconda.com/).
 You can also create required virtual environment with [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
+
+This environment generated with tensorflow gpu!
 
 ```sh
 conda env create -f environment.yml
@@ -21,24 +25,14 @@ Then you can train models with.
 python trainer.py
 ```
 
-Or you can use trained models for predictions.
-
-```python
-python predictor.py
-```
-
 ## Experimental Results
 
-| Trained with Dataset | Test Accuracy on SVHN | Test Accuracy on MNIST |
-| :------------------: | :-------------------: | :--------------------: |
-| SVHN                 | 0.8877                | 0.5858                 |
-| MNIST                | 0.2897                | 0.9905                 |
-| SVHN + MNIST         | 0.8983                | 0.9891                 |
-
-### Normalized Confusion Matrices
-
-SVHN confusion matrices for different models | MNIST confusion matrices for different models
-:-------------------------------------------:|:---------------------------------------------:
-![svhn-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhn.png) | ![mnist-cm-by-svhn](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhn.png)
-![svhn-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_mnist.png) | ![mnist-cm-by-mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_mnist.png)
-![svhn-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/svhn_cm_by_svhnmnist.png) | ![mnist-cm-by-svhn+mnist](http://furkanomerustaoglu.com/wp-content/uploads/2019/11/mnist_cm_by_svhnmnist.png)
+| Trained with Dataset | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :------------------: | :--------------------: | :-------------------: | :-------------------: |
+| MNIST                | 0.99                   | 0.72                  | 0.28                  |
+| ORHD                 | 0.25                   | 0.97                  | 0.13                  |
+| SVHN                 | 0.59                   | 0.45                  | 0.90                  |     
+| ORHD+MNIST           | 0.99                   | 0.98                  | 0.28                  |
+| ORHD+SVHN            | 0.60                   | 0.97                  | 0.89                  |
+| SVHN+MNIST           | 0.99                   | 0.64                  | 0.90                  |
+| ORHD+SVHN+MNIST      | 0.99                   | 0.98                  | 0.90                  |

@@ -1,4 +1,16 @@
+#################################################
+## For GPU compatibility tf2
+#################################################
+import tensorflow as tf
+try:
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
+except Exception as e:
+    print(e)
+#################################################
 import os
+import itertools
 import scipy.io as sio
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,6 +21,7 @@ from keras.datasets import mnist
 from keras import backend as K
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.datasets import load_digits
 
 MNIST_height, MNIST_width = 28, 28
 
@@ -83,10 +96,10 @@ def handle_output_data(output, num_classes):
     # convert class vectors to binary class matrices
     return keras.utils.to_categorical(output, num_classes)
 
-def handle_input_data(input):
+def handle_input_data(input, n=255):
     input = handle_channel(input)
     input = input.astype("float32")
-    input /= 255
+    input /= n
     return input
 
 def get_input_shape():
@@ -102,6 +115,20 @@ def handle_channel(data):
     else:
         data = data.reshape(data.shape[0], MNIST_height, MNIST_width, 1)
     return data
+
+def prepare_ORHD_to_MNIST_format(data):
+    images = []
+    num = data.images.shape[0]
+    for i in range(num):
+        image = Image.fromarray(data.images[i,:,:])
+        image = image.resize((MNIST_height, MNIST_height))
+        image = np.array(image.convert("I"))
+        image = image.reshape(image.shape[0], image.shape[1], 1)
+        images.append(image)
+    x = np.asarray(images)
+    x = handle_input_data(x, 16)
+    y = handle_output_data(data.target, 10)
+    return x, y
 
 def prepare_SVHN_to_MNIST_format(data):
     images = []
@@ -133,6 +160,14 @@ def prepare_final_data(x_train, y_train, x_test, y_test):
         "y_test": y_test,
     }
 
+def get_ORHD_data():
+    data = load_digits()
+    x, y = prepare_ORHD_to_MNIST_format(data)
+    #
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
+    print("ORHD data summary: ")
+    return prepare_final_data(x_train, y_train, x_test, y_test)
+
 def get_SVHN_data():
     train_data = sio.loadmat("data/train_32x32.mat")
     test_data = sio.loadmat("data/test_32x32.mat")
@@ -153,3 +188,46 @@ def get_MNIST_data():
     #
     print("MNIST data summary: ")
     return prepare_final_data(x_train, y_train, x_test, y_test)
+
+def get_combined_dataset(datasets, combination):
+    x_train = np.concatenate([datasets[dataset]["x_train"] for dataset in combination])
+    y_train = np.concatenate([datasets[dataset]["y_train"] for dataset in combination])
+    x_valid = np.concatenate([datasets[dataset]["x_valid"] for dataset in combination])
+    y_valid = np.concatenate([datasets[dataset]["y_valid"] for dataset in combination])
+    x_test = np.concatenate([datasets[dataset]["x_test"] for dataset in combination])
+    y_test = np.concatenate([datasets[dataset]["y_test"] for dataset in combination])
+    return {
+        "x_train": x_train,
+        "y_train": y_train,
+        "x_valid": x_valid,
+        "y_valid": y_valid,
+        "x_test": x_test,
+        "y_test": y_test,
+    }
+
+def get_datasets(use_datasets, n_combinations=1):
+    datasets = {}
+    for dataset in use_datasets:
+        if dataset == "MNIST":
+            datasets["MNIST"] = get_MNIST_data()
+        elif dataset == "SVHN":
+            datasets["SVHN"] = get_SVHN_data()
+        elif dataset == "ORHD":
+            datasets["ORHD"] = get_ORHD_data()
+    for i in range(n_combinations):
+        n = i + 1
+        combinations = itertools.combinations(use_datasets, n)
+        for combination in combinations:
+            dataset = "+".join(combination)
+            if dataset in datasets:
+                continue
+            datasets[dataset] = get_combined_dataset(datasets, combination)
+    return datasets
+
+def evaluate(model, datasets, use_datasets):
+    for key in use_datasets:
+        dataset = datasets[key]
+        score = model.evaluate(dataset["x_test"], dataset["y_test"])
+        print(key, "Test loss:", score[0])
+        print(key, "Test accuracy:", score[1])
+        print("=========================================")
