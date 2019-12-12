@@ -85,13 +85,6 @@ def get_files(path):
             })
     return files
 
-def merge_SVHN_MNIST_to_training(SVHN, MNIST):
-    x_train = np.concatenate((SVHN["x_train"], MNIST["x_train"]))
-    y_train = np.concatenate((SVHN["y_train"], MNIST["y_train"]))
-    x_valid = np.concatenate((SVHN["x_valid"], MNIST["x_valid"]))
-    y_valid = np.concatenate((SVHN["y_valid"], MNIST["y_valid"]))
-    return x_train, y_train, x_valid, y_valid
-
 def handle_output_data(output, num_classes):
     # convert class vectors to binary class matrices
     return keras.utils.to_categorical(output, num_classes)
@@ -231,3 +224,10 @@ def evaluate(model, datasets, use_datasets):
         print(key, "Test loss:", score[0])
         print(key, "Test accuracy:", score[1])
         print("=========================================")
+
+def get_model_path(trained_with):
+    main_path = "models"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    model_path = main_path+"/"+trained_with+"_model.h5"
+    return model_path

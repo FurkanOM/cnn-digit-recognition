@@ -29,7 +29,8 @@ for trained_with in datasets:
                   metrics=["accuracy"])
     #
     early_stopping = EarlyStopping(monitor="val_accuracy", patience=4, verbose=0, mode="auto")
-    model_checkpoint = ModelCheckpoint("models/"+trained_with+"_model.h5", save_best_only=True, monitor="val_accuracy", mode="auto")
+    model_path = Helpers.get_model_path(trained_with)
+    model_checkpoint = ModelCheckpoint(model_path, save_best_only=True, monitor="val_accuracy", mode="auto")
     #
     dataset = datasets[trained_with]
     x_train, y_train, x_valid, y_valid = dataset["x_train"], dataset["y_train"], dataset["x_valid"], dataset["y_valid"]
