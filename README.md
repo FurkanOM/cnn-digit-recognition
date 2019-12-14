@@ -13,10 +13,16 @@ Simple application for digit recognition with CNN using three different datasets
 Project models created in virtual environment using [anaconda](https://www.anaconda.com/).
 You can also create required virtual environment with [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
 
-This environment generated with tensorflow gpu! But it should be work without gpu
+Virtual environment by tensorflow 2 with GPU support:
 
 ```sh
 conda env create -f environment.yml
+```
+
+Virtual environment by tensorflow 2 without GPU support:
+
+```sh
+conda env create -f environment-without-gpu.yml
 ```
 
 Then you can train models with.

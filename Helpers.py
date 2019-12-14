@@ -85,6 +85,13 @@ def get_files(path):
             })
     return files
 
+def get_model_path(trained_with):
+    main_path = "models"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    model_path = main_path+"/"+trained_with+"_model.h5"
+    return model_path
+
 def handle_output_data(output, num_classes):
     # convert class vectors to binary class matrices
     return keras.utils.to_categorical(output, num_classes)
@@ -109,14 +116,18 @@ def handle_channel(data):
         data = data.reshape(data.shape[0], MNIST_height, MNIST_width, 1)
     return data
 
+def convert_array_to_MNIST_type_img(array):
+    image = Image.fromarray(array)
+    image = image.resize((MNIST_height, MNIST_height))
+    image = np.array(image.convert("I"))
+    image = image.reshape(image.shape[0], image.shape[1], 1)
+    return image
+
 def prepare_ORHD_to_MNIST_format(data):
     images = []
     num = data.images.shape[0]
     for i in range(num):
-        image = Image.fromarray(data.images[i,:,:])
-        image = image.resize((MNIST_height, MNIST_height))
-        image = np.array(image.convert("I"))
-        image = image.reshape(image.shape[0], image.shape[1], 1)
+        image = convert_array_to_MNIST_type_img(data.images[i,:,:])
         images.append(image)
     x = np.asarray(images)
     x = handle_input_data(x, 16)
@@ -127,10 +138,7 @@ def prepare_SVHN_to_MNIST_format(data):
     images = []
     num = data["X"].shape[-1]
     for i in range(num):
-        image = Image.fromarray(data["X"][:,:,:,i])
-        image = image.resize((MNIST_height, MNIST_height))
-        image = np.array(image.convert("I"))
-        image = image.reshape(image.shape[0], image.shape[1], 1)
+        image = convert_array_to_MNIST_type_img(data["X"][:,:,:,i])
         images.append(image)
     x = np.asarray(images)
     y = data["y"].reshape(data["y"].shape[0], )
@@ -224,10 +232,3 @@ def evaluate(model, datasets, use_datasets):
         print(key, "Test loss:", score[0])
         print(key, "Test accuracy:", score[1])
         print("=========================================")
-
-def get_model_path(trained_with):
-    main_path = "models"
-    if not os.path.exists(main_path):
-        os.makedirs(main_path)
-    model_path = main_path+"/"+trained_with+"_model.h5"
-    return model_path
