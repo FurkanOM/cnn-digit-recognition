@@ -163,6 +163,21 @@ def prepare_final_data(x_train, y_train, x_test, y_test):
         "y_test": y_test,
     }
 
+def get_ARDIS_data():
+    x_train=np.loadtxt('data/ARDIS_train_2828.csv', dtype='float')
+    x_test=np.loadtxt('data/ARDIS_test_2828.csv', dtype='float')
+    y_train=np.loadtxt('data/ARDIS_train_labels.csv', dtype='float')
+    y_test=np.loadtxt('data/ARDIS_test_labels.csv', dtype='float')
+    #
+    x_train = x_train.reshape(x_train.shape[0], 28, 28).astype('float32')
+    x_test = x_test.reshape(x_test.shape[0], 28, 28).astype('float32')
+    #
+    x_train = handle_input_data(x_train)
+    x_test = handle_input_data(x_test)
+    #
+    print("ARDIS data summary: ")
+    return prepare_final_data(x_train, y_train, x_test, y_test)
+
 def get_ORHD_data():
     data = load_digits()
     x, y = prepare_ORHD_to_MNIST_format(data)
@@ -217,6 +232,8 @@ def get_datasets(use_datasets, n_combinations=1):
             datasets["SVHN"] = get_SVHN_data()
         elif dataset == "ORHD":
             datasets["ORHD"] = get_ORHD_data()
+        elif dataset == "ARDIS":
+            datasets["ARDIS"] = get_ARDIS_data()
     for i in range(n_combinations):
         n = i + 1
         combinations = itertools.combinations(use_datasets, n)

@@ -2,6 +2,8 @@
 
 Simple application for digit recognition with CNN using three different datasets.
 
+ * ARDIS-IV - The Swedish Dataset of Historical Handwritten Digits [link](https://ardisdataset.github.io/ARDIS/)
+
  * MNIST Database of Handwritten Digits [link](https://keras.io/datasets/)
 
  * ORHD - Optical Recognition of Handwritten Digits Data Set [link](https://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits)
@@ -35,26 +37,60 @@ python trainer.py {version}
 
 ### Using v1 model
 
-| Trained with Dataset | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
-| :------------------: | :--------------------: | :-------------------: | :-------------------: |
-| MNIST                | 0.99                   | 0.72                  | 0.28                  |
-| ORHD                 | 0.25                   | 0.97                  | 0.13                  |
-| SVHN                 | 0.59                   | 0.45                  | 0.90                  |
-| ORHD+MNIST           | 0.99                   | 0.98                  | 0.28                  |
-| ORHD+SVHN            | 0.60                   | 0.97                  | 0.89                  |
-| SVHN+MNIST           | 0.99                   | 0.64                  | 0.90                  |
-| ORHD+SVHN+MNIST      | 0.99                   | 0.98                  | 0.90                  |
+| Trained with Dataset    | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS                   | 0.98                   | 0.54                   | 0.63                  | 0.15                  |
+| MNIST                   | 0.64                   | 0.99                   | 0.72                  | 0.28                  |
+| ORHD                    | 0.31                   | 0.25                   | 0.97                  | 0.13                  |
+| SVHN                    | 0.25                   | 0.59                   | 0.45                  | 0.90                  |
+
+| Trained with 2 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST             | 0.97                   | 0.99                   | 0.73                  | 0.19                  |
+| ARDIS+ORHD              | 0.98                   | 0.56                   | 0.99                  | 0.17                  |
+| ARDIS+SVHN              | 0.95                   | 0.76                   | 0.52                  | 0.90                  |
+| MNIST+ORHD              | 0.69                   | 0.99                   | 0.98                  | 0.28                  |
+| MNIST+SVHN              | 0.60                   | 0.99                   | 0.64                  | 0.90                  |
+| ORHD+SVHN               | 0.31                   | 0.60                   | 0.97                  | 0.89                  |
+
+| Trained with 3 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST+ORHD        | 0.98                   | 0.99                   | 0.98                  | 0.22                  |
+| ARDIS+MNIST+SVHN        | 0.96                   | 0.99                   | 0.69                  | 0.88                  |
+| ARDIS+ORHD+SVHN         | 0.97                   | 0.77                   | 0.96                  | 0.86                  |
+| MNIST+ORHD+SVHN         | 0.63                   | 0.99                   | 0.98                  | 0.90                  |
+
+| Trained with 4 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST+ORHD+SVHN   | 0.97                   | 0.99                   | 0.98                  | 0.90                  |
 
 ### Using v2 model
 
 Used number of filters/kernels increased
 
-| Trained with Dataset | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
-| :------------------: | :--------------------: | :-------------------: | :-------------------: |
-| MNIST                | 0.99                   | 0.74                  | 0.17                  |
-| ORHD                 | 0.10                   | 0.09                  | 0.11                  |
-| SVHN                 | 0.68                   | 0.64                  | 0.94                  |
-| ORHD+MNIST           | 0.99                   | 0.99                  | 0.23                  |
-| ORHD+SVHN            | 0.69                   | 0.99                  | 0.93                  |
-| SVHN+MNIST           | 0.99                   | 0.66                  | 0.93                  |
-| ORHD+SVHN+MNIST      | 0.99                   | 0.99                  | 0.94                  |
+| Trained with Dataset    | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS                   | 0.17                   | 0.13                   | 0.10                  | 0.16                  |
+| MNIST                   | 0.80                   | 0.99                   | 0.74                  | 0.17                  |
+| ORHD                    | 0.15                   | 0.10                   | 0.09                  | 0.11                  |
+| SVHN                    | 0.37                   | 0.68                   | 0.64                  | 0.94                  |
+
+| Trained with 2 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST             | 0.99                   | 0.99                   | 0.74                  | 0.18                  |
+| ARDIS+ORHD              | 0.98                   | 0.67                   | 0.97                  | 0.19                  |
+| ARDIS+SVHN              | 0.98                   | 0.86                   | 0.70                  | 0.94                  |
+| MNIST+ORHD              | 0.83                   | 0.99                   | 0.99                  | 0.23                  |
+| MNIST+SVHN              | 0.83                   | 0.99                   | 0.71                  | 0.93                  |
+| ORHD+SVHN               | 0.44                   | 0.69                   | 0.99                  | 0.93                  |
+
+| Trained with 3 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST+ORHD        | 0.99                   | 0.99                   | 1.00                  | 0.21                  |
+| ARDIS+MNIST+SVHN        | 0.99                   | 0.99                   | 0.67                  | 0.92                  |
+| ARDIS+ORHD+SVHN         | 0.98                   | 0.84                   | 0.97                  | 0.88                  |
+| MNIST+ORHD+SVHN         | 0.85                   | 0.99                   | 0.99                  | 0.93                  |
+
+| Trained with 4 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
+| :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
+| ARDIS+MNIST+ORHD+SVHN   | 0.99                   | 0.99                   | 0.98                  | 0.94                  |
