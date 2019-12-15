@@ -19,6 +19,8 @@ from PIL import Image
 import keras
 from keras.datasets import mnist
 from keras import backend as K
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, Dense, BatchNormalization, Dropout, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.datasets import load_digits
@@ -85,11 +87,11 @@ def get_files(path):
             })
     return files
 
-def get_model_path(trained_with):
-    main_path = "models"
+def get_model_path(trained_with, version):
+    main_path = os.path.join("models", version)
     if not os.path.exists(main_path):
         os.makedirs(main_path)
-    model_path = main_path+"/"+trained_with+"_model.h5"
+    model_path = os.path.join(main_path, trained_with + "_model.h5")
     return model_path
 
 def handle_output_data(output, num_classes):
@@ -232,3 +234,48 @@ def evaluate(model, datasets, use_datasets):
         print(key, "Test loss:", score[0])
         print(key, "Test accuracy:", score[1])
         print("=========================================")
+
+def get_model(input_shape, version="v1"):
+    if version == "v1":
+        return get_model_v1(input_shape)
+    elif version == "v2":
+        return get_model_v2(input_shape)
+    else:
+        raise Exception("Please give a valid version for model")
+
+def get_model_v1(input_shape):
+    model = Sequential()
+    model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=input_shape))
+    model.add(Conv2D(64, (3, 3), activation="relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(128, activation="relu"))
+    model.add(Dropout(0.5))
+    return model
+
+def get_model_v2(input_shape):
+    model = Sequential()
+    #Block1
+    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape, padding='same'))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    #Block2
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    #Block3
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.25))
+    #
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.25))
+    return model
