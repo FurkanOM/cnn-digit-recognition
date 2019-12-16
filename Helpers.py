@@ -10,6 +10,7 @@ except Exception as e:
     print(e)
 #################################################
 import os
+import sys
 import itertools
 import scipy.io as sio
 import numpy as np
@@ -252,13 +253,11 @@ def evaluate(model, datasets, use_datasets):
         print(key, "Test accuracy:", score[1])
         print("=========================================")
 
+def raise_model_exception(_):
+    raise Exception("Please give a valid version for training model")
+
 def get_model(input_shape, version="v1"):
-    if version == "v1":
-        return get_model_v1(input_shape)
-    elif version == "v2":
-        return get_model_v2(input_shape)
-    else:
-        raise Exception("Please give a valid version for model")
+    return getattr(sys.modules[__name__], "get_model_"+version, raise_model_exception)(input_shape)
 
 def get_model_v1(input_shape):
     model = Sequential()
@@ -276,14 +275,14 @@ def get_model_v2(input_shape):
     #Block1
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape, padding='same'))
     model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-    model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(BatchNormalization())
     model.add(Dropout(0.25))
     #Block2
     model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
     model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-    model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(BatchNormalization())
     model.add(Dropout(0.25))
     #Block3
     model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
