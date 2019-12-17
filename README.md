@@ -70,15 +70,15 @@ Used number of filters/kernels increased
 
 | Trained with Dataset    | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
 | :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
-| ARDIS                   | 0.24                   | 0.21                   | 0.15                  | 0.06                  |
+| ARDIS                   | 0.99                   | 0.76                   | 0.77                  | 0.18                  |
 | MNIST                   | 0.85                   | 0.99                   | 0.77                  | 0.22                  |
-| ORHD                    | 0.10                   | 0.10                   | 0.13                  | 0.06                  |
+| ORHD                    | 0.39                   | 0.31                   | 0.98                  | 0.11                  |
 | SVHN                    | 0.32                   | 0.65                   | 0.68                  | 0.93                  |
 
 | Trained with 2 Dataset  | Test Accuracy on ARDIS | Test Accuracy on MNIST | Test Accuracy on ORHD | Test Accuracy on SVHN |
 | :---------------------: | :--------------------: | :--------------------: | :-------------------: | :-------------------: |
 | ARDIS+MNIST             | 0.98                   | 0.99                   | 0.85                  | 0.24                  |
-| ARDIS+ORHD              | 0.98                   | 0.69                   | 0.97                  | 0.16                  |
+| ARDIS+ORHD              | 0.99                   | 0.79                   | 0.99                  | 0.23                  |
 | ARDIS+SVHN              | 0.99                   | 0.85                   | 0.72                  | 0.93                  |
 | MNIST+ORHD              | 0.90                   | 0.99                   | 0.99                  | 0.24                  |
 | MNIST+SVHN              | 0.86                   | 0.99                   | 0.72                  | 0.94                  |

@@ -1,18 +1,15 @@
-import sys
 import keras
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from keras.layers import Dense
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 import Helpers
 
-version = sys.argv[1] if len(sys.argv) > 1 else "v1"
 use_datasets = ["ARDIS", "MNIST", "ORHD", "SVHN"]
-batch_size = 256
 num_classes = 10
 epochs = 20
 #
 datasets = Helpers.get_datasets(use_datasets, n_combinations=4)
 input_shape = Helpers.get_input_shape()
+version = Helpers.get_version()
 for trained_with in datasets:
     model = Helpers.get_model(input_shape, version=version)
     model.add(Dense(num_classes, activation="softmax"))
@@ -27,6 +24,9 @@ for trained_with in datasets:
     #
     dataset = datasets[trained_with]
     x_train, y_train, x_valid, y_valid = dataset["x_train"], dataset["y_train"], dataset["x_valid"], dataset["y_valid"]
+    batch_size = Helpers.get_batch_size(x_train)
+    if x_train.shape[0] > 10000:
+        continue
     #
     print("Training started with:", trained_with, "dataset", "model version", version)
     model.fit(x_train, y_train,

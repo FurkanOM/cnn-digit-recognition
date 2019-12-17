@@ -259,6 +259,24 @@ def raise_model_exception(_):
 def get_model(input_shape, version="v1"):
     return getattr(sys.modules[__name__], "get_model_"+version, raise_model_exception)(input_shape)
 
+def get_version():
+    return sys.argv[1] if len(sys.argv) > 1 else "v1"
+
+def get_batch_size(train_data):
+    batch_size = 1024
+    length = train_data.shape[0]
+    if length < 5000:
+        batch_size = 2
+    elif length < 25000:
+        batch_size = 16
+    elif length < 50000:
+        batch_size = 128
+    elif length < 250000:
+        batch_size = 256
+    elif length < 500000:
+        batch_size = 512
+    return batch_size
+
 def get_model_v1(input_shape):
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3), activation="relu", input_shape=input_shape))
