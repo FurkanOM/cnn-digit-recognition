@@ -25,8 +25,6 @@ for trained_with in datasets:
     dataset = datasets[trained_with]
     x_train, y_train, x_valid, y_valid = dataset["x_train"], dataset["y_train"], dataset["x_valid"], dataset["y_valid"]
     batch_size = Helpers.get_batch_size(x_train)
-    if x_train.shape[0] > 10000:
-        continue
     #
     print("Training started with:", trained_with, "dataset", "model version", version)
     model.fit(x_train, y_train,
