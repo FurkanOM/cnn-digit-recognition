@@ -27,7 +27,7 @@ Environment with tensorflow 2 without GPU support:
 conda env create -f environment-without-gpu.yml
 ```
 
-You can use the version you want for training as follows. Valid versions => ["v1", "v2"]
+You can use the version you want for training as follows. Valid versions => ["v1", "v2"], default version is "v2"
 
 ```python
 python trainer.py {version}

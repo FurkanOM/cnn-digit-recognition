@@ -11,7 +11,7 @@ datasets = Helpers.get_datasets(use_datasets, n_combinations=4)
 input_shape = Helpers.get_input_shape()
 version = Helpers.get_version()
 for trained_with in datasets:
-    model = Helpers.get_model(input_shape, version=version)
+    model = Helpers.get_model(input_shape, version)
     model.add(Dense(num_classes, activation="softmax"))
     #
     model.compile(loss=keras.losses.categorical_crossentropy,

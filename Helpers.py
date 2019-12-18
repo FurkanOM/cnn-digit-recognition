@@ -95,6 +95,21 @@ def get_model_path(trained_with, version):
     model_path = os.path.join(main_path, trained_with + "_model.h5")
     return model_path
 
+def get_batch_size(train_data):
+    batch_size = 1024
+    length = train_data.shape[0]
+    if length < 5000:
+        batch_size = 2
+    elif length < 25000:
+        batch_size = 16
+    elif length < 50000:
+        batch_size = 128
+    elif length < 250000:
+        batch_size = 256
+    elif length < 500000:
+        batch_size = 512
+    return batch_size
+
 def handle_output_data(output, num_classes):
     # convert class vectors to binary class matrices
     return keras.utils.to_categorical(output, num_classes)
@@ -253,29 +268,14 @@ def evaluate(model, datasets, use_datasets):
         print(key, "Test accuracy:", score[1])
         print("=========================================")
 
+def get_version(default_version="v2"):
+    return sys.argv[1] if len(sys.argv) > 1 else default_version
+
 def raise_model_exception(_):
     raise Exception("Please give a valid version for training model")
 
-def get_model(input_shape, version="v1"):
+def get_model(input_shape, version):
     return getattr(sys.modules[__name__], "get_model_"+version, raise_model_exception)(input_shape)
-
-def get_version():
-    return sys.argv[1] if len(sys.argv) > 1 else "v1"
-
-def get_batch_size(train_data):
-    batch_size = 1024
-    length = train_data.shape[0]
-    if length < 5000:
-        batch_size = 2
-    elif length < 25000:
-        batch_size = 16
-    elif length < 50000:
-        batch_size = 128
-    elif length < 250000:
-        batch_size = 256
-    elif length < 500000:
-        batch_size = 512
-    return batch_size
 
 def get_model_v1(input_shape):
     model = Sequential()
