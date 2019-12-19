@@ -12,7 +12,7 @@ Simple application for digit recognition with CNN using four different datasets.
 
 ## Usage
 
-Project models created in virtual environment using [anaconda](https://www.anaconda.com/).
+Project models created in virtual environment using [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 You can also create required virtual environment with [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
 
 Environment with tensorflow 2:
