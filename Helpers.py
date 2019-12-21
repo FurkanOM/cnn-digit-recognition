@@ -11,6 +11,7 @@ except Exception as e:
 #################################################
 import os
 import sys
+import json
 import itertools
 import scipy.io as sio
 import numpy as np
@@ -88,12 +89,18 @@ def get_files(path):
             })
     return files
 
-def get_model_path(trained_with, version):
+def get_main_path(version):
     main_path = os.path.join("models", version)
     if not os.path.exists(main_path):
         os.makedirs(main_path)
-    model_path = os.path.join(main_path, trained_with + "_model.h5")
-    return model_path
+    return main_path
+
+def get_model_path(main_path, trained_with):
+    return os.path.join(main_path, trained_with + "_model.h5")
+
+def save_results_as_json(main_path, results):
+    with open(os.path.join(main_path, "results.json"), 'w') as jsonfile:
+        json.dump(results, jsonfile)
 
 def get_batch_size(train_data):
     batch_size = 1024
@@ -261,12 +268,25 @@ def get_datasets(use_datasets, n_combinations=1):
     return datasets
 
 def evaluate(model, datasets, use_datasets):
+    results = {}
     for key in use_datasets:
+        results[key] = {"dataset": key}
         dataset = datasets[key]
-        score = model.evaluate(dataset["x_test"], dataset["y_test"])
-        print(key, "Test loss:", score[0])
-        print(key, "Test accuracy:", score[1])
+        loss, accuracy = model.evaluate(dataset["x_test"], dataset["y_test"])
+        results[key]["loss"] = round(float(loss), 5)
+        results[key]["accuracy"] = round(float(accuracy), 5)
+    return results
+
+def print_results(results, trained_with, version):
+    print("============================================================================")
+    print("Trained with:", trained_with, "model version", version)
+    print("============================================================================")
+    for dataset in results:
+        result = results[dataset]
+        print(dataset, "Test loss:", result["loss"])
+        print(dataset, "Test accuracy:", result["accuracy"])
         print("=========================================")
+    print("============================================================================")
 
 def get_version(default_version="v2"):
     return sys.argv[1] if len(sys.argv) > 1 else default_version
