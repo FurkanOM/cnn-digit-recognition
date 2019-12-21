@@ -5,7 +5,7 @@ import Helpers
 
 use_datasets = ["ARDIS", "MNIST", "ORHD", "SVHN"]
 num_classes = 10
-epochs = 20
+epochs = 30
 results = {}
 #
 datasets = Helpers.get_datasets(use_datasets, n_combinations=4)
@@ -17,7 +17,9 @@ for trained_with in datasets:
     model.add(Dense(num_classes, activation="softmax"))
     #
     model.compile(loss=keras.losses.categorical_crossentropy,
-                  optimizer=keras.optimizers.Adadelta(),
+                  # default learning rate for Adadelta in keras 1.0 but 0.001 in tf.keras
+                  # we increase it for fast convergence
+                  optimizer=keras.optimizers.Adadelta(learning_rate=0.1),
                   metrics=["accuracy"])
     #
     early_stopping = EarlyStopping(monitor="val_accuracy", patience=4, verbose=0, mode="auto")
