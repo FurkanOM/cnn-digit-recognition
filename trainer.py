@@ -1,6 +1,6 @@
-import keras
-from keras.layers import Dense
-from keras.callbacks import EarlyStopping, ModelCheckpoint
+import tensorflow.keras as keras
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import Helpers
 
 use_datasets = ["ARDIS", "MNIST", "ORHD", "SVHN"]

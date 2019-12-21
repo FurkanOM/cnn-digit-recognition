@@ -17,14 +17,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from PIL import Image
-import keras
-from keras.datasets import mnist
-from keras import backend as K
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dense, BatchNormalization, Dropout, Flatten
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.datasets import load_digits
+import tensorflow.keras as keras
+import tensorflow.keras.backend as K
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, BatchNormalization, Dropout, Flatten
+from tensorflow.keras.models import Sequential
 
 MNIST_height, MNIST_width = 28, 28
 
