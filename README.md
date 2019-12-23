@@ -29,14 +29,14 @@ conda env create -f environment-without-gpu.yml
 
 You can use the version you want for training as follows. Valid versions => ["v1", "v2"], default version is "v2"
 
-```python
+```sh
 python trainer.py --version {version}
 ```
 
 If you have GPU compatibility issues like in [here](https://github.com/tensorflow/tensorflow/issues/24828).
 You can use gpu compatibility flag for handle this issue: **-handle-gpu**
 
-```python
+```sh
 python trainer.py --version v2 -handle-gpu
 ```
 
