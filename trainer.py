@@ -8,9 +8,12 @@ num_classes = 10
 epochs = 30
 results = {}
 #
+args = Helpers.handle_args()
+if args.handle_gpu:
+    Helpers.handle_gpu_compatibility()
 datasets = Helpers.get_datasets(use_datasets, n_combinations=4)
 input_shape = Helpers.get_input_shape()
-version = Helpers.get_version()
+version = args.version
 main_path = Helpers.get_main_path(version)
 for trained_with in datasets:
     model = Helpers.get_model(input_shape, version)

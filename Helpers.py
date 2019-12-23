@@ -1,16 +1,6 @@
-#################################################
-## For GPU compatibility tf2
-#################################################
-import tensorflow as tf
-try:
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    for gpu in gpus:
-        tf.config.experimental.set_memory_growth(gpu, True)
-except Exception as e:
-    print(e)
-#################################################
 import os
 import sys
+import argparse
 import json
 import itertools
 import scipy.io as sio
@@ -21,6 +11,7 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.datasets import load_digits
+import tensorflow as tf
 import tensorflow.keras as keras
 import tensorflow.keras.backend as K
 from tensorflow.keras.datasets import mnist
@@ -28,6 +19,15 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, BatchNormalizat
 from tensorflow.keras.models import Sequential
 
 MNIST_height, MNIST_width = 28, 28
+
+def handle_gpu_compatibility():
+    # For tf2 GPU compatibility
+    try:
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except Exception as e:
+        print(e)
 
 def plot_confusion_matrix(cm, labels, normalize=True, title=None, cmap=plt.cm.Blues):
     if not title:
@@ -288,8 +288,15 @@ def print_results(results, trained_with, version):
         print("=========================================")
     print("============================================================================")
 
-def get_version(default_version="v2"):
-    return sys.argv[1] if len(sys.argv) > 1 else default_version
+def handle_args():
+    parser = argparse.ArgumentParser(description="CNN Digit Recognition Implementation")
+    parser.add_argument('-handle-gpu', action='store_true', help="Tensorflow 2 GPU compatibility flag")
+    parser.add_argument('--version', required=False,
+                        default="v2",
+                        metavar="['v1', 'v2']",
+                        help='Which CNN model you want to use')
+    args = parser.parse_args()
+    return args
 
 def raise_model_exception(_):
     raise Exception("Please give a valid version for training model")
