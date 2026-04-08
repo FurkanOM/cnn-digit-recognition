@@ -141,13 +141,11 @@ class DataUtilsTests(unittest.TestCase):
         self.assertEqual(datasets["SVHN"], svhn_split)
         self.assertEqual(datasets["MNIST+SVHN"]["x_train"], [1, 7])
 
-    def test_legacy_aliases_are_preserved(self) -> None:
-        """Legacy function names should continue pointing at the snake_case variants."""
-        self.assertIs(self.module.get_MNIST_data, self.module.get_mnist_data)
-        self.assertIs(
-            self.module.prepare_ORHD_to_MNIST_format,
-            self.module.prepare_orhd_to_mnist_format,
-        )
+    def test_snake_case_public_helpers_are_available(self) -> None:
+        """The module should expose the snake_case helper functions directly."""
+        self.assertTrue(callable(self.module.get_mnist_data))
+        self.assertTrue(callable(self.module.prepare_orhd_to_mnist_format))
+        self.assertTrue(callable(self.module.convert_array_to_mnist_type_image))
 
 
 if __name__ == "__main__":

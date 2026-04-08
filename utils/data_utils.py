@@ -307,12 +307,3 @@ def get_datasets(use_datasets: Sequence[str], n_combinations: int = 1) -> Datase
             datasets[dataset_name] = get_combined_dataset(datasets, combination)
 
     return datasets
-
-
-convert_array_to_MNIST_type_img = convert_array_to_mnist_type_image
-prepare_ORHD_to_MNIST_format = prepare_orhd_to_mnist_format
-prepare_SVHN_to_MNIST_format = prepare_svhn_to_mnist_format
-get_ARDIS_data = get_ardis_data
-get_ORHD_data = get_orhd_data
-get_SVHN_data = get_svhn_data
-get_MNIST_data = get_mnist_data
