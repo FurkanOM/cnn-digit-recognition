@@ -38,25 +38,44 @@ class TrainerTests(unittest.TestCase):
     def test_importing_trainer_does_not_start_training(self) -> None:
         """Importing the module should not execute the training loop."""
         _, modules = make_dependency_modules()
-        helper_module = types.ModuleType("helpers")
-        helper_module.calls = []
+        call_log = []
+        utils_package = types.ModuleType("utils")
+        utils_package.__path__ = []
+        common_module = types.ModuleType("utils.common")
+        common_module.DatasetCollection = dict
+        common_module.ImageShape = tuple
+        common_module.NUM_CLASSES = 10
+        data_utils_module = types.ModuleType("utils.data_utils")
+        eval_utils_module = types.ModuleType("utils.eval_utils")
+        io_utils_module = types.ModuleType("utils.io_utils")
+        model_utils_module = types.ModuleType("utils.model_utils")
 
         def unexpected_call(*_args: object, **_kwargs: object) -> None:
             """Fail if import-time side effects trigger helper work."""
-            helper_module.calls.append("called")
+            call_log.append("called")
 
-        helper_module.handle_args = unexpected_call
-        helper_module.handle_gpu_compatibility = unexpected_call
-        helper_module.get_datasets = unexpected_call
-        helper_module.get_input_shape = unexpected_call
-        helper_module.get_main_path = unexpected_call
-        helper_module.get_model = unexpected_call
-        helper_module.get_model_path = unexpected_call
-        helper_module.get_batch_size = unexpected_call
-        helper_module.evaluate = unexpected_call
-        helper_module.print_results = unexpected_call
-        helper_module.save_results_as_json = unexpected_call
-        modules["helpers"] = helper_module
+        data_utils_module.get_batch_size = unexpected_call
+        data_utils_module.get_datasets = unexpected_call
+        data_utils_module.get_input_shape = unexpected_call
+        eval_utils_module.evaluate = unexpected_call
+        eval_utils_module.print_results = unexpected_call
+        io_utils_module.get_main_path = unexpected_call
+        io_utils_module.get_model_path = unexpected_call
+        io_utils_module.handle_args = unexpected_call
+        io_utils_module.handle_gpu_compatibility = unexpected_call
+        io_utils_module.save_results_as_json = unexpected_call
+        model_utils_module.get_model = unexpected_call
+        utils_package.common = common_module
+        utils_package.data_utils = data_utils_module
+        utils_package.eval_utils = eval_utils_module
+        utils_package.io_utils = io_utils_module
+        utils_package.model_utils = model_utils_module
+        modules["utils"] = utils_package
+        modules["utils.common"] = common_module
+        modules["utils.data_utils"] = data_utils_module
+        modules["utils.eval_utils"] = eval_utils_module
+        modules["utils.io_utils"] = io_utils_module
+        modules["utils.model_utils"] = model_utils_module
 
         import_project_module(
             "trainer",
@@ -64,18 +83,27 @@ class TrainerTests(unittest.TestCase):
             clear_modules=("trainer",),
         )
 
-        self.assertEqual(helper_module.calls, [])
+        self.assertEqual(call_log, [])
 
     def test_main_runs_training_flow_and_persists_results(self) -> None:
         """The trainer should build, fit, evaluate, and persist each dataset run."""
         _, modules = make_dependency_modules()
-        helper_module = types.ModuleType("helpers")
         fake_model = FakeTrainingModel()
         call_log = {
             "gpu": 0,
             "print_results": [],
             "saved": None,
         }
+        utils_package = types.ModuleType("utils")
+        utils_package.__path__ = []
+        common_module = types.ModuleType("utils.common")
+        common_module.DatasetCollection = dict
+        common_module.ImageShape = tuple
+        common_module.NUM_CLASSES = 10
+        data_utils_module = types.ModuleType("utils.data_utils")
+        eval_utils_module = types.ModuleType("utils.eval_utils")
+        io_utils_module = types.ModuleType("utils.io_utils")
+        model_utils_module = types.ModuleType("utils.model_utils")
         datasets = {
             "MNIST": {
                 "x_train": types.SimpleNamespace(shape=(10,)),
@@ -85,27 +113,39 @@ class TrainerTests(unittest.TestCase):
             }
         }
 
-        helper_module.handle_args = lambda argv=None: types.SimpleNamespace(handle_gpu=True, version="v1")
-        helper_module.handle_gpu_compatibility = lambda: call_log.__setitem__("gpu", call_log["gpu"] + 1)
-        helper_module.get_datasets = lambda use_datasets, n_combinations=1: datasets
-        helper_module.get_input_shape = lambda: (28, 28, 1)
-        helper_module.get_main_path = lambda version: "models/" + version
-        helper_module.get_model = lambda input_shape, version: fake_model
-        helper_module.get_model_path = lambda main_path, trained_with: main_path + "/" + trained_with + ".h5"
-        helper_module.get_batch_size = lambda x_train: 16
-        helper_module.evaluate = lambda model, dataset_map, use_datasets: {
+        data_utils_module.get_batch_size = lambda x_train: 16
+        data_utils_module.get_datasets = lambda use_datasets, n_combinations=1: datasets
+        data_utils_module.get_input_shape = lambda: (28, 28, 1)
+        eval_utils_module.evaluate = lambda model, dataset_map, use_datasets: {
             "MNIST": {"loss": 0.1, "accuracy": 0.9}
         }
-        helper_module.print_results = (
+        eval_utils_module.print_results = (
             lambda results, trained_with, version: call_log["print_results"].append(
                 (results, trained_with, version)
             )
         )
-        helper_module.save_results_as_json = lambda main_path, results: call_log.__setitem__(
+        io_utils_module.get_main_path = lambda version: "models/" + version
+        io_utils_module.get_model_path = lambda main_path, trained_with: main_path + "/" + trained_with + ".h5"
+        io_utils_module.handle_args = lambda argv=None: types.SimpleNamespace(handle_gpu=True, version="v1")
+        io_utils_module.handle_gpu_compatibility = (
+            lambda: call_log.__setitem__("gpu", call_log["gpu"] + 1)
+        )
+        io_utils_module.save_results_as_json = lambda main_path, results: call_log.__setitem__(
             "saved",
             (main_path, results),
         )
-        modules["helpers"] = helper_module
+        model_utils_module.get_model = lambda input_shape, version: fake_model
+        utils_package.common = common_module
+        utils_package.data_utils = data_utils_module
+        utils_package.eval_utils = eval_utils_module
+        utils_package.io_utils = io_utils_module
+        utils_package.model_utils = model_utils_module
+        modules["utils"] = utils_package
+        modules["utils.common"] = common_module
+        modules["utils.data_utils"] = data_utils_module
+        modules["utils.eval_utils"] = eval_utils_module
+        modules["utils.io_utils"] = io_utils_module
+        modules["utils.model_utils"] = model_utils_module
 
         trainer = import_project_module(
             "trainer",

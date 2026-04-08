@@ -9,10 +9,9 @@ from typing import Iterator, List
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECK_DIRS = ("tests", "tools")
+CHECK_DIRS = ("tests", "tools", "utils")
 CHECK_FILES = (
     "__init__.py",
-    "helpers.py",
     "trainer.py",
 )
 
