@@ -40,6 +40,17 @@ You can use gpu compatibility flag for handle this issue: **-handle-gpu**
 python trainer.py --version v2 -handle-gpu
 ```
 
+## Quality Checks
+
+The repository now includes lightweight local quality checks that do not require
+additional lint dependencies.
+
+```sh
+make lint
+make test
+make check
+```
+
 ## Experimental Results
 
 ### Using v1 model
